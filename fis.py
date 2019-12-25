@@ -9,6 +9,7 @@ average = []
 # data.dropna(inplace = True)
 dic = {}
 MIN_SUPP = 0.000001
+DATA_SET_SIZE = 2
 itemsets = {}
 
 
@@ -147,5 +148,7 @@ for k, v in itemsets.items():
 print('K  V')
 print('----')
 for k, v in dic_average.items():
-    if v['count'] > 1:
+    if v['count'] != DATA_SET_SIZE:
+        print(k, v['support']/(DATA_SET_SIZE - v['count'] + 1))
+    else:
         print(k, v['support']/v['count'])
