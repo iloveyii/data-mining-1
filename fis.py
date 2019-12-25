@@ -9,9 +9,10 @@ average = []
 # data.dropna(inplace = True)
 dic = {}
 MIN_SUPP = 0.000001
+itemsets = {}
 
 
-def addaverage(frequent_itemsets):
+def addaverage2(frequent_itemsets):
     global dic
     for index, row in frequent_itemsets.iterrows():
         itemsets = row['itemsets']
@@ -32,6 +33,7 @@ def addaverage(frequent_itemsets):
 
 def fis(dataset, split=1000):
     global MIN_SUPP
+    global itemsets
     te = TransactionEncoder()
     rows_count = len(dataset)
     max = rows_count
@@ -46,6 +48,9 @@ def fis(dataset, split=1000):
         df = pd.DataFrame(te_ary, columns=te.columns_)
         # print(df)
         frequent_itemsets = apriori(df, min_support=MIN_SUPP, use_colnames=True)
+        # save this to global variable
+        itemsets[count] = frequent_itemsets
+
         listSupport = list(frequent_itemsets['support'])
         listItemsets = list(frequent_itemsets['itemsets'])
         # print(listSupport, listItemsets)
@@ -55,13 +60,14 @@ def fis(dataset, split=1000):
             # print(listSupport[i], listItemsets[i])
             if listItemsets[i] in dic:
                 dicListItemsets = dic[listItemsets[i]]
-                dic[listItemsets[i]] = {'support': dicListItemsets['support'] + listSupport[i], 'count': dicListItemsets['count'] + 1}
+                dic[listItemsets[i]] = {'support': dicListItemsets['support'] + listSupport[i],
+                                        'count': dicListItemsets['count'] + 1}
             else:
                 dic[listItemsets[i]] = {'support': listSupport[i], 'count': 1}
 
     # print(dic)
-    for key, value in dic.items():
-        print(f'{key} {value} - ', value['support']/value['count'])
+    # for key, value in dic.items():
+    # print(f'{key} {value} - ', value['support']/value['count'])
     return False
 
     sets = 0
@@ -95,7 +101,7 @@ def fis(dataset, split=1000):
             print(dic)
 
 
-def itemset(dataset):
+def oneDataset(dataset):
     global MIN_SUPP
     te = TransactionEncoder()
     te_ary = te.fit(dataset).transform(dataset)
@@ -117,6 +123,29 @@ fileName = './kosarak.dat'
 # print(lineList[0:15])
 # dataset = lineList[0:2000]
 # print(f'Number of rows : {len(lineList)}')
-print('Dataset')
-itemset(dataset)
+print('ONE Dataset')
+oneDataset(dataset)
+
 fis(dataset, 2)
+print('Multi Dataset')
+
+dic_average = {}
+for k, v in itemsets.items():
+    print(k)
+    print('-----')
+    for index, row in v.iterrows():
+        items_ary = sorted(list(row['itemsets']))
+        separator = '-'
+        str_items = separator.join(items_ary)
+        print(index, row['support'], str_items)
+        if str_items in dic_average:
+            # print(str_items + ' exists in dic')
+            dic_average[str_items] = {'support': dic_average[str_items]['support'] + row['support'], 'count': 1 + dic_average[str_items]['count']}
+        else:
+            dic_average[str_items] = {'support': row['support'], 'count': 1}
+
+print('K  V')
+print('----')
+for k, v in dic_average.items():
+    if v['count'] > 1:
+        print(k, v['support']/v['count'])
