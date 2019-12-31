@@ -2,37 +2,52 @@ from mlxtend.frequent_patterns import apriori
 from mlxtend.preprocessing import TransactionEncoder
 import pandas as pd
 import math
-
-average = []
-
 # # dropping null value columns to avoid errors
 # data.dropna(inplace = True)
-dic = {}
-MIN_SUPP = 0.000001
-DATA_SET_SIZE = 2
+MIN_SUPP = 0.3
+DATA_SET_SIZE = 25000
 itemsets = {}
 
 
-def addaverage2(frequent_itemsets):
-    global dic
-    for index, row in frequent_itemsets.iterrows():
-        itemsets = row['itemsets']
-        support = row['support']
-        print(support, itemsets)
-        continue
-        if itemsets in dic:
-            print('exist')
-            # take average
-            oldSupport = dic[itemsets]
-            print('oldSupport', oldSupport)
-            avgSupport = (oldSupport + support) / 2
-            dic[itemsets] = avgSupport
+def averageAllSets():
+    dic_average = {}
+    for k, v in itemsets.items():
+        # print(k)
+        # print('-----')
+        for index, row in v.iterrows():
+            items_ary = sorted(list(row['itemsets']))
+            separator = '-'
+            str_items = separator.join(items_ary)
+            print(index, row['support'], str_items)
+            if str_items in dic_average:
+                da = dic_average[str_items]
+                print(da)
+                da.append(row['support'])
+                dic_average[str_items] = da
+            else:
+                print(0)
+                dic_average[str_items] = []
+
+            continue
+            if str_items in dic_average:
+                # print(str_items + ' exists in dic')
+                dic_average[str_items] = {'support': dic_average[str_items]['support'] + row['support'],
+                                          'count': 1 + dic_average[str_items]['count']}
+            else:
+                dic_average[str_items] = {'support': row['support'], 'count': 1}
+
+    print(dic_average)
+    return False
+    print('K  V')
+    print('----')
+    for k, v in dic_average.items():
+        if v['count'] != DATA_SET_SIZE:
+            print(k, v['support'] / (DATA_SET_SIZE - v['count'] + 1))
         else:
-            dic[itemsets] = support
-        print(dic)
+            print(k, v['support'] / v['count'])
 
 
-def fis(dataset, split=1000):
+def fis(dataset, split=DATA_SET_SIZE):
     global MIN_SUPP
     global itemsets
     te = TransactionEncoder()
@@ -43,7 +58,7 @@ def fis(dataset, split=1000):
     for count in range(0, max, split):
         print(count)
         subset = dataset[count:count + split]
-        print(subset)
+        #print(subset)
         te_ary = te.fit(subset).transform(subset)
         # print(te_ary)
         df = pd.DataFrame(te_ary, columns=te.columns_)
@@ -51,55 +66,7 @@ def fis(dataset, split=1000):
         frequent_itemsets = apriori(df, min_support=MIN_SUPP, use_colnames=True)
         # save this to global variable
         itemsets[count] = frequent_itemsets
-
-        listSupport = list(frequent_itemsets['support'])
-        listItemsets = list(frequent_itemsets['itemsets'])
-        # print(listSupport, listItemsets)
-        # addaverage(frequent_itemsets)
-        max = len(listSupport)
-        for i in range(0, max):
-            # print(listSupport[i], listItemsets[i])
-            if listItemsets[i] in dic:
-                dicListItemsets = dic[listItemsets[i]]
-                dic[listItemsets[i]] = {'support': dicListItemsets['support'] + listSupport[i],
-                                        'count': dicListItemsets['count'] + 1}
-            else:
-                dic[listItemsets[i]] = {'support': listSupport[i], 'count': 1}
-
-    # print(dic)
-    # for key, value in dic.items():
-    # print(f'{key} {value} - ', value['support']/value['count'])
-    return False
-
-    sets = 0
-    dic = {}
-    for count in range(0, max, split):
-        # print(count)
-        sets += 1
-
-        # print(sets)
-        te_ary = te.fit(dataset[count:count + split]).transform(dataset[count:count + split])
-        # print(te_ary)  # true false
-        # print(te_ary.astype("int"))
-        df = pd.DataFrame(te_ary, columns=te.columns_)
-        # print(df)
-        frequent_itemsets = apriori(df, min_support=0.6, use_colnames=True)
-        # addaverage(frequent_itemsets)
-        print(frequent_itemsets)
-
-        for index, row in frequent_itemsets.iterrows():
-            itemsets = row['itemsets']
-            support = row['support']
-            print(support, itemsets)
-            if itemsets in dic:
-                print('exist')
-                # take average
-                oldSupport = dic[itemsets]
-                avgSupport = (oldSupport + support) / 2
-                dic[itemsets] = avgSupport
-            else:
-                dic[itemsets] = {'support': support, count: 1}
-            print(dic)
+        print(frequent_itemsets.to_json(orient='records'))
 
 
 def oneDataset(dataset):
@@ -120,35 +87,20 @@ dataset = [['A', 'B'],
            ['A', 'B', 'E']]
 # Open dataset from file
 fileName = './kosarak.dat'
-# lineList = [(line.rstrip('\n')).split(' ') for line in open(fileName) if not line.isspace()]
+lineList = [(line.rstrip('\n')).split(' ') for line in open(fileName) if not line.isspace()]
 # print(lineList[0:15])
-# dataset = lineList[0:2000]
+dataset = lineList[0:50000]
 # print(f'Number of rows : {len(lineList)}')
-print('ONE Dataset')
+
+# print('ONE Dataset')
 oneDataset(dataset)
 
-fis(dataset, 2)
+fis(dataset, DATA_SET_SIZE)
 print('Multi Dataset')
 
-dic_average = {}
-for k, v in itemsets.items():
+for k,v in itemsets.items():
     print(k)
-    print('-----')
-    for index, row in v.iterrows():
-        items_ary = sorted(list(row['itemsets']))
-        separator = '-'
-        str_items = separator.join(items_ary)
-        print(index, row['support'], str_items)
-        if str_items in dic_average:
-            # print(str_items + ' exists in dic')
-            dic_average[str_items] = {'support': dic_average[str_items]['support'] + row['support'], 'count': 1 + dic_average[str_items]['count']}
-        else:
-            dic_average[str_items] = {'support': row['support'], 'count': 1}
+    print('-------')
+    print(v)
 
-print('K  V')
-print('----')
-for k, v in dic_average.items():
-    if v['count'] != DATA_SET_SIZE:
-        print(k, v['support']/(DATA_SET_SIZE - v['count'] + 1))
-    else:
-        print(k, v['support']/v['count'])
+averageAllSets()
