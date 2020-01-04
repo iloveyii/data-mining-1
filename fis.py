@@ -10,6 +10,7 @@ dic = {}
 
 def print_set():
     """ Prints the result dictionary - average of all results """
+    global dic
     print('')
     print(f'{"items":<10} : {"support":>10}')
     print('-' * 23)
