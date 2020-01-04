@@ -2,8 +2,8 @@ Lab 1
 ===================
 
 
-![Screenshot]()
-![Result]()
+![Screenshot](https://github.com/iloveyii/data-mining-1/blob/master/screenshot.png)
+![Result](https://github.com/iloveyii/data-mining-1/blob/master/result.png)
 ## Description
 
 
