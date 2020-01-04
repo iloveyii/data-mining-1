@@ -8,7 +8,7 @@ DATA_SET_SIZE = 5000  # SEGMENT size of data
 dic = {}
 
 
-def print_set():
+def print_result():
     """ Prints the result dictionary - average of all results """
     global dic
     print('')
@@ -49,7 +49,7 @@ def fis(dataset, split=DATA_SET_SIZE):
         add_to_dict(frequent_itemsets)
 
     # print(dic)
-    print_set()
+    print_result()
 
 
 """ RUN CODE """
@@ -57,3 +57,5 @@ def fis(dataset, split=DATA_SET_SIZE):
 fileName = './kosarak.dat'
 lineList = [(line.rstrip('\n')).split(' ') for line in open(fileName) if not line.isspace()]
 fis(lineList, DATA_SET_SIZE)
+
+print_result()
