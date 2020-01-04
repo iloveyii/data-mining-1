@@ -7,6 +7,25 @@ MIN_SUPP = 0.2  # Support
 DATA_SET_SIZE = 5000  # SEGMENT size of data
 
 
+def printSet(dic):
+    print('')
+    for k, v in dic.items():
+        print(k, round(np.average(v), 4))
+
+
+def addToDict(frequent_itemsets):
+    support = frequent_itemsets.support
+    set = frequent_itemsets.itemsets
+
+    for i in range(0, len(frequent_itemsets)):
+        separator = '-'
+        str_set = separator.join(sorted(list(set.iloc[i])))
+        if str_set in dic:
+            dic[str_set].append(support.iloc[i])
+        else:
+            dic[str_set] = [support.iloc[i]]
+
+
 def fis(dataset, split=DATA_SET_SIZE):
     global MIN_SUPP
     te = TransactionEncoder()
@@ -32,11 +51,10 @@ def fis(dataset, split=DATA_SET_SIZE):
                 dic[str_set] = [support.iloc[i]]
 
     # print(dic)
-    print('')
-    for k,v in dic.items():
-        print(k, round(np.average(v), 4))
+    printSet(dic)
 
 
+'' #### RUN CODE ##### ''
 # Open dataset from file
 fileName = './kosarak.dat'
 lineList = [(line.rstrip('\n')).split(' ') for line in open(fileName) if not line.isspace()]
