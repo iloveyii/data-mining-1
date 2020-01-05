@@ -2,8 +2,8 @@ Lab 1
 ===================
 
 
-![Screenshot](https://github.com/iloveyii/data-mining-1/blob/master/task2/screenshot.png)
-![Result](https://github.com/iloveyii/data-mining-1/blob/master/task2/result.png)
+![Screenshot](https://github.com/iloveyii/data-mining-1/blob/master/part2/screenshot.png)
+![Result](https://github.com/iloveyii/data-mining-1/blob/master/part2/result.png)
 
 # Objective
 In this lab, you shall
