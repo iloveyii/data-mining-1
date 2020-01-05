@@ -1,5 +1,7 @@
-Lab 1 - Task 1
+Lab 1 - PART 1
 ===================
+
+Once enrolled in the Cloud environment, read tutorials available online to understand how machine learning and data mining tasks can be executed on the Cloud.
 
 ![Result](https://github.com/iloveyii/data-mining-1/blob/master/part1/images/dl1.png)
 
