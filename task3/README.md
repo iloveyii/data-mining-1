@@ -18,4 +18,6 @@ Lab 1 - Task 3
   
 ## Run
   * Run the script as
-    `python3 fis.py`
+    `python3.6 exploratory_analysis.py`
+    `python3.6 task3.py`
+  * Using Jupyter for this task is recommended. Open and run exploratory_analysis.ipynb and task3.ipynb
