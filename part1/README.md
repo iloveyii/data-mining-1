@@ -1,8 +1,7 @@
 Lab 1 - Task 1
 ===================
 
-
-![Result](https://github.com/iloveyii/data-mining-1/blob/master/task2/result.png)
+![Result](https://github.com/iloveyii/data-mining-1/blob/master/part1/images/dl1.png)
 
 # Objective
 In this part, you shall
@@ -15,7 +14,7 @@ Google cloud provides a trial free services for learning purposes.
 ## Virtual Machines
 		Service: Compute > Compute engine
 
-![Screenshot](https://github.com/iloveyii/data-mining-1/blob/master/task2/screenshot.png)
+![Screenshot](https://github.com/iloveyii/data-mining-1/blob/master/part1/images/gc-vm2.png)
 
 
 * To connect to virtual machine use the following command:
